@@ -1,7 +1,9 @@
 var usage = require('../usage');
 
 var commands = {
-  create: require('./create')
+  create:  require('./create'),
+  destroy: require('./destroy'),
+  list: require('./list')
 };
 
 module.exports = function(argv) {
