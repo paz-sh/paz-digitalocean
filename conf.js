@@ -5,6 +5,7 @@ var fs = require('fs');
 
 var confDir = path.join(homedir, '.paz-digitalocean');
 
+exports.dir = confDir;
 
 exports.ensure = function() {
   mkdirp.sync(confDir);

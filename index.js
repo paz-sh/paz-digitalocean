@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 require('colors');
+var usage = require('./usage');
 var conf = require('./conf');
 
 var argv = require('minimist')(process.argv.slice(2));
@@ -12,7 +13,8 @@ if (! command) {
 }
 
 var commands = {
-  setup: require('./setup')
+  setup: require('./setup'),
+  cluster: require('./cluster')
 };
 
 command = commands[command];
@@ -25,12 +27,6 @@ if (! command) {
 conf.ensure();
 
 command(argv);
-
-function usage() {
-  console.log('paz-digitalocean [COMMAND]');
-  console.log('\ncommands:');
-  console.log('\setup');
-}
 
 function error(err) {
   console.error((err.message || err).red);
