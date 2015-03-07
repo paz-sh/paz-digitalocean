@@ -1,0 +1,31 @@
+{
+  "name": "paz-digitalocean",
+  "version": "0.0.1",
+  "description": "Install Paz on Digital Ocean",
+  "main": "index.js",
+  "bin": {
+    "paz-digitalocean": "index.js",
+    "paz-do": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pgte/paz-digitalocean.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pgte/paz-digitalocean/issues"
+  },
+  "homepage": "https://github.com/pgte/paz-digitalocean",
+  "dependencies": {
+    "async": "^0.9.0",
+    "colors": "^1.0.3",
+    "homedir": "^0.6.0",
+    "minimist": "^1.1.0",
+    "mkdirp": "^0.5.0",
+    "read": "^1.0.5"
+  }
+}
