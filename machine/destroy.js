@@ -27,7 +27,7 @@ module.exports = function(argv) {
     return error('please run setup to setup your DO API token');
   }
 
-  var api = new DO(token);
+  var api = DO(token);
   var path = join(clusterPath, 'machines', name + '.json');
 
   var machine;
