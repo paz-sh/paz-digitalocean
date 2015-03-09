@@ -5,7 +5,6 @@ var error = require('../error');
 
 var fields = [
   "digitalocean_api_token",
-  "domain",
   "dnsimple_api_key",
   "dnsimple_email"
 ];

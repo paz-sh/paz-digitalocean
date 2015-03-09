@@ -1,5 +1,6 @@
 var usages = {
-  global: global
+  global: global,
+  cluster: cluster
 };
 
 module.exports = function usage(command) {
@@ -15,4 +16,12 @@ function global() {
   console.log('\ncommands:');
   console.log('\tsetup');
   console.log('\tcluster');
+}
+
+function cluster() {
+  console.log('paz-digitalocean cluster [COMMAND]');
+  console.log('\ncommands:');
+  console.log('\tcreate');
+  console.log('\tlist');
+  console.log('\tdestroy');
 }

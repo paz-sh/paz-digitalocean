@@ -1,5 +1,6 @@
 var mustache = require('mustache');
 var mkdirp = require('mkdirp');
+var async = require('async');
 var conf = require('../conf');
 var join = require('path').join;
 var clusterDir = join(conf.dir, 'clusters');
@@ -8,23 +9,65 @@ var fs = require('fs');
 
 var error = require('../error');
 
-module.exports = function(argv) {
-  console.log('About to create cluster'.yellow);
-  read({
-    prompt: 'Cluster name: '
-  }, function(err, clusterName) {
-    if (err) {
-      return error(err);
-    }
+var fields = [
+  'name',
+  'discovery_url',
+  'region',
+  'size',
+  'domain'
+];
 
-    createCluster(clusterName);
-  }
-  );
+module.exports = function(argv) {
+  async.mapSeries(fields, prompt, prepareFields);
 };
 
-function createCluster(clusterName) {
+function prepareFields(err, results) {
+  if (err) {
+    error(err);
+  }
+  else {
+    var ret = {};
 
-  var path = join(clusterDir, clusterName);
+    fields.forEach(function(field, index) {
+      ret[field] = results[index];
+    });
+
+    promptKeys(ret);
+  }
+}
+
+function prompt(question, cb) {
+  read({
+    prompt: question + ':'
+  }, cb);
+}
+
+function promptKeys(options) {
+  read({
+    prompt: 'SSH key fingerprint (empty to end):'
+  }, function(err, result) {
+    if (err) {
+      error(err);
+    }
+    else {
+      if (!options.ssh_keys) {
+        options.ssh_keys = [];
+      }
+      if (result) {
+        options.ssh_keys.push(result);
+        promptKeys(options);
+      }
+      else {
+        createCluster(options);
+      }
+    }
+  });
+}
+
+function createCluster(options) {
+  console.log('About to create cluster'.yellow);
+
+  var path = join(clusterDir, options.name);
 
   if(fs.existsSync(path)) {
     return error('a cluster with that name already exists');
@@ -32,33 +75,19 @@ function createCluster(clusterName) {
 
   mkdirp.sync(path);
 
-  read({
-    prompt: 'Generate a discovery URL by visiting http://discovery.etcd.io/new or getting one:'
-  }, function(err, url) {
-    var templateData = {
-      discovery_url: url
-    };
-
-    [
-      "digitalocean_api_token",
-      "domain",
-      "dnsimple_api_key",
-      "dnsimple_email"
-    ].forEach(function(key) {
-      var val = conf.get(key);
-      if (! val) {
-        return error('need configuration for ' + key);
-      }
-      templateData[key] = val;
-    });
-
-    var userData = generateUserData(templateData);
-    var userDataPath = join(path, 'userdata');
-
-    fs.writeFileSync(userDataPath, userData);
-
-    console.log('Saved user data in %s'.green, userDataPath);
+  Object.keys(options).forEach(function(field) {
+    fs.writeFileSync(join(path, field), JSON.stringify(options[field]));
   });
+
+  options.dnsimple_api_key = conf.get('dnsimple_api_key');
+  options.dnsimple_email = conf.get('dnsimple_email');
+
+  var userData = generateUserData(options);
+  var userDataPath = join(path, 'userdata');
+
+  fs.writeFileSync(userDataPath, userData);
+
+  console.log('Saved user data in %s'.green, userDataPath);
 }
 
 function generateUserData(data) {

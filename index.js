@@ -14,7 +14,8 @@ if (! command) {
 
 var commands = {
   setup: require('./setup'),
-  cluster: require('./cluster')
+  cluster: require('./cluster'),
+  machine: require('./machine')
 };
 
 command = commands[command];
