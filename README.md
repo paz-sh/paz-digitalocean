@@ -54,6 +54,14 @@ IP addresses: [ { ip_address: '10.131.177.239',
     type: 'public' } ]
 ```
 
+## Destroy a machine in the cluster
+
+```bash
+$ paz-digitalocean machine destroy paz 001
+destroying machine paz-1 (4404553)
+```
+
+
 ## License
 
 ISC
