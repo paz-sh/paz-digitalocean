@@ -22,6 +22,6 @@ exports.get = function(key) {
 exports.set = function(key, value) {
   return fs.writeFileSync(path.join(confDir, key), value, {
     encoding: 'utf8',
-    mode: 0o600
+    mode: 0600
   });
 };
