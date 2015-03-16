@@ -45,7 +45,7 @@ module.exports = function(argv) {
   };
 
   // quick hack to make the machine name available as fleet metadata
-  options.user_data.replace('paz=wow', 'machine-name=' + options.name);
+  options.user_data = options.user_data.replace('paz=wow', 'machine-name=' + options.name);
 
   console.log('creating droplet...'.yellow);
 
