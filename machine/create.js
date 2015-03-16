@@ -44,6 +44,9 @@ module.exports = function(argv) {
       fs.readFileSync(join(clusterPath, 'ssh_keys'), {encoding: 'utf8'})),
   };
 
+  // quick hack to make the machine name available as fleet metadata
+  options.user_data.replace('paz=wow', 'machine-name=' + options.name);
+
   console.log('creating droplet...'.yellow);
 
   api.droplet.create(options, function(err, result) {
